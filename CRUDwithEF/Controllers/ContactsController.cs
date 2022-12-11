@@ -1,11 +1,13 @@
 ﻿using CRUDwithEF.Data;
 using CRUDwithEF.DTOs.Contacts;
 using CRUDwithEF.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRUDwithEF.Controllers
 {
+    [Authorize(Roles = UserRoles.User+","+UserRoles.Admin)]
     [ApiController]
     [Route("api/[controller]")]
     public class ContactsController : Controller
@@ -41,6 +43,7 @@ namespace CRUDwithEF.Controllers
             }
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpPost]
         public async Task<IActionResult> AddContact([FromBody] ContactDTO dto)
         {
@@ -81,7 +84,8 @@ namespace CRUDwithEF.Controllers
 
             return NotFound();
         }
-        
+
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpDelete]
         [Route("{id:guid}")]
         public async Task<IActionResult> DeleteContact([FromRoute] Guid id)
